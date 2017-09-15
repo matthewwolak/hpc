@@ -6,6 +6,7 @@ library(utils)
 library(methods)
 library(base)
 
+
 # Command-line arguments
 args <- commandArgs(TRUE)
   t <- as.integer(args[1])
@@ -13,8 +14,8 @@ args <- commandArgs(TRUE)
 
 
 #FIXME Adjust the MCMC parameters for the TOTAL chain length
-nsamp <- 2000
-BURN <- 3000; THIN <- 50; (NITT <- BURN + THIN*nsamp)
+nsamp <- 1000
+BURN <- 3000; THIN <- 10; (NITT <- BURN + THIN*nsamp)
 
 
 
