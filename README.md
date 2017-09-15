@@ -8,3 +8,6 @@ This repository contains templates and example code used for cluster computing a
 
 ## R Statistical Software on the HPC
 Much of the code focuses on parallel computing in conjunction with the [R](https://cran.r-project.org/) statistical program.
+
+### R-MCMCglmm
+Bayesian generalized linear mixed models using Markov chain Monte Carlo, where the code in this directory is used to split up the MCMC chain and run numerous parallel chains as an array of jobs. Post-processing R code then checks and combines the chains to form a single posterior distribution of model parameters.
