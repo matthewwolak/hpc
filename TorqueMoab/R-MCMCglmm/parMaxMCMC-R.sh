@@ -1,21 +1,24 @@
 #!/usr/bin/env Rscript
+
+# Clean R session is started, the following packages are necessary
 library(stats)
 library(utils)
 library(methods)
 library(base)
 
+# Command-line arguments
 args <- commandArgs(TRUE)
   t <- as.integer(args[1])
   totalT <- as.integer(args[2])
 
 
-#FIXME
+#FIXME Adjust the MCMC parameters for the TOTAL chain length
 nsamp <- 2000
-BURN <- 5000; THIN <- 4000; (NITT <- BURN + THIN*nsamp)
+BURN <- 3000; THIN <- 50; (NITT <- BURN + THIN*nsamp)
 
 
 
-
+# Below calculates the number of iterations for the t-th chain (out of T chains)
 tnsamp <- ceiling(nsamp/totalT)
 (tNITT <- BURN + tnsamp*THIN)
 
@@ -25,14 +28,14 @@ if(grepl("<< Cluster username (should be distinct from personal computer account
   setwd("<< PATH to cluster folder >>")
 } else setwd("<< PATH to local computer folder >>")
 library(MCMCglmm)
-library(nadiv)
+
+# Make each chain start with different random number generator seed
 set.seed(100 + t)
 
 
-#FIXME
-# R-specific pre-processing operations unique to an analysis
-load(file = "<< Usually data >>")
-
+#FIXME R-specific pre-processing operations unique to an analysis/dataset
+## e.g., load(file = "<< Usually data >>")
+data(PlodiaPO)
 
 
 
@@ -46,11 +49,9 @@ load(file = "<< Usually data >>")
 
 ##############################################################
 #FIXME
-# Priors
-bivPEpriorNukp1 <- list(R = list(V = diag(2), nu = 2),
-	G = list(G1 = list(V = diag(2)*0.02, nu = 3, alpha.mu = c(0,0), alpha.V = diag(2)*1000),
-		G2 = list(V = diag(2)*0.02, nu = 3, alpha.mu = c(0,0), alpha.V = diag(2)*1000)))
-
+# Priors of other than default
+PEpriorIW <- list(R = list(V = diag(1), nu = 1),
+	G = list(G1 = list(V = diag(1), nu = 1, alpha.mu = rep(0, 1), alpha.V = diag(1)*1000)))
 
 
 
@@ -61,46 +62,38 @@ bivPEpriorNukp1 <- list(R = list(V = diag(2), nu = 2),
 # Should be over-dispersed (find citation?)
 #FIXME
 #XXX Make sure matches actual data in model
-nfx <- nrow(AdLRS93to12)
+nfx <- nrow(PlodiaPO)
+
+#XXX Make sure matches prior
+startN <- list(liab = rnorm(nfx, 0, 12),   # Need to specify the liabilities  
+	R = list(R1 = rIW(diag(1), 15)),
+	G = list(G1 = rIW(diag(1), 15)))
 
 
-#startN <- list(liab = rnorm(nfx, 0, 12),    #XXX *2 if hupoisson
-#	R = list(R1 = rIW(diag(1), 15)), #diag(1)),##XXX add `, fix = 2)),` for hupoisson/zipoisson
-#	G = list(G1 = rIW(diag(1), 15),
-#		G2 = rIW(diag(1), 15),
-#		G3 = rIW(diag(1), 15)))
-#############################################
-startN <- list(liab = rnorm(nfx, 0, 12),    
-	R = list(R1 = rIW(diag(2), 15)),
-	G = list(G1 = rIW(diag(2), 15),
-		G2 = rIW(diag(2), 15)))
 
 
 #FIXME
 # Model name, use periods between words/phrases
-modName <- "<< something describing the model >>"
+## e.g., modName <- "<< something describing the model >>"
+modName <- "model1"
 
 
 
-
-
+# the file name is the model name, but uses underscores instead of periods
 filename <- gsub(pattern = "[:.:]", replacement = "_", x = modName)
 modName <- paste0(modName, t)
 
 
 
 #FIXME
-system.time(tMod <- MCMCglmm(genLRS ~ sex * f,
-	random = ~ us(sex):id + us(sex):natalyr,
-	rcov = ~ idh(sex):units,
-	ginverse = list(id = Ainv),
-	data = AdLRS93to12,
-	prior = bivPEpriorNukp1,
-	family = "poisson",
-	slice = TRUE,
+system.time(tMod <- MCMCglmm(PO ~ 1,
+	random = ~ FSfamily,
+	data = PlodiaPO,
+	prior = PEpriorIW,
 	pl = TRUE, pr = TRUE, saveX = TRUE, saveZ = TRUE,
-	nitt = tNITT, thin = THIN, burnin = BURN))
-
+	nitt = tNITT, thin = THIN, burnin = BURN,
+	verbose = FALSE))
+     
 
 ############################################################
 assign(modName, tMod)
