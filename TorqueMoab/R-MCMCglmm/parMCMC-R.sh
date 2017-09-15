@@ -22,12 +22,6 @@ BURN <- 3000; THIN <- 10; (NITT <- BURN + THIN*nsamp)
 # Below calculates the number of iterations for the t-th chain (out of T chains)
 tnsamp <- ceiling(nsamp/totalT)
 (tNITT <- BURN + tnsamp*THIN)
-
-
-# Determine if on cluster or own computer
-if(grepl("<< Cluster username (should be distinct from personal computer account name >>", getwd())){
-  setwd("<< PATH to cluster folder >>")
-} else setwd("<< PATH to local computer folder >>")
 library(MCMCglmm)
 
 # Make each chain start with different random number generator seed
