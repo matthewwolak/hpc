@@ -38,7 +38,7 @@
 #-----------------------
 
 #-- Expected runtime/walltime=hours:mins:seconds, eg 24:00:00
-#PBS -l walltime=48:00:00
+#PBS -l walltime=1:00:00
 
 #-- How many tasks to schedule at once?
 #-- Set a variable that is passed to the jobs
@@ -68,7 +68,7 @@ echo "Array ID : $PBS_ARRAYID"
 echo "Total array size : $ARRAY_TOT"
 
 
-./parMCMC-R.sh $PBS_ARRAYID $ARRAY_TOT
+./parMCMC-R.sh $PBS_ARRAYID $ARRAY_TOT >> $(pwd)/ao.$PBS_ARRAYID
 
 
 echo "Finishing on : $(date)"
