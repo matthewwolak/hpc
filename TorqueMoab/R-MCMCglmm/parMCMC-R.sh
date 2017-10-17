@@ -85,6 +85,7 @@ system.time(tMod <- MCMCglmm(PO ~ 1,
 	random = ~ FSfamily,
 	data = PlodiaPO,
 	prior = PEpriorIW,
+	start = startN,
 	pl = TRUE, pr = TRUE, saveX = TRUE, saveZ = TRUE,
 	nitt = tNITT, thin = THIN, burnin = BURN,
 	verbose = FALSE))
