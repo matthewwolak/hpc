@@ -49,7 +49,7 @@
 
 #-- Number of nodes and cores you want to use
 #-- Hopper's standard compute nodes have a total of 20 (or 28) cores each (ppn)
-#PBS -l nodes=10:ppn=1
+#PBS -l nodes=1:ppn=1
 
 #-- Expected memory limit (per processor)
 #PBS -l mem=2gb
