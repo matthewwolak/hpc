@@ -7,21 +7,28 @@ library(methods)
 library(base)
 
 
+Sys.time()
 # Command-line arguments
 args <- commandArgs(TRUE)
   t <- as.integer(args[1])
   totalT <- as.integer(args[2])
+ cat("Task:", t, "of Array size:", totalT, "\n")
+
+
 
 
 #FIXME Adjust the MCMC parameters for the TOTAL chain length
 nsamp <- 1000
-BURN <- 3000; THIN <- 10; (NITT <- BURN + THIN*nsamp)
+BURN <- 3000; THIN <- 10
+NITT <- BURN + THIN*nsamp
+
 
 
 
 # Below calculates the number of iterations for the t-th chain (out of T chains)
 tnsamp <- ceiling(nsamp/totalT)
-(tNITT <- BURN + tnsamp*THIN)
+tNITT <- BURN + tnsamp*THIN
+cat("Total MCMC length:", NITT, "\n Task MCMC length:", tNITT, "\n")
 library(MCMCglmm)
 
 # Make each chain start with different random number generator seed
