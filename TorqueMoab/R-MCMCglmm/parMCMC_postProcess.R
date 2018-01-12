@@ -1,6 +1,7 @@
 rm(list = ls())
 			# base name of the models
-modName <- paste0("<< replace name here: should correspond with parMaxMCMC-R.sh but have UNDERSCORES between words/phrases >>")
+modNamePeriods <- paste0("<< replace model name here: should correspond with parMaxMCMC-R.sh and have PERIODS between words/phrases >>")
+modName <- paste0(gsub(pattern = ".", replacement = "_", modNamePeriods, fixed = TRUE), "_")
 maxn <- 20		# number of jobs in single array
 nsamp <- 2000		# total sample size desired for analyses of dataset
   nsamp <- ceiling(nsamp/maxn) * maxn #correction in case any rounding was done
